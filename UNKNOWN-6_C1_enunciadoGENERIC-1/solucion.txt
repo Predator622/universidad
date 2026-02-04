@@ -1,0 +1,148 @@
+### Paso 2: Implementar Singleton & Registry
+
+#### Singleton Pattern Implementation for `SimulationManager`
+
+```java
+public class SimulationManager {
+    private static volatile SimulationManager instance;
+
+    private SimulationManager() {}
+
+    /**
+     * Returns the singleton instance of SimulationManager.
+     * @return The unique instance of SimulationManager.
+     */
+    public static synchronized SimulationManager getInstance() {
+        if (instance == null) {
+            instance = new SimulationManager();
+        }
+        return instance;
+    }
+
+    // Métodos públicos...
+}
+```
+
+#### Registry Pattern Implementation
+
+```java
+import java.util.concurrent.ConcurrentHashMap;
+
+public class ComponentRegistry {
+    private static final ConcurrentHashMap<Class<?>, Object> registryMap;
+
+    static {
+        registryMap = new ConcurrentHashMap<>();
+    }
+
+    /**
+     * Registers an instance of a component.
+     * @param clazz The class type to register.
+     * @param instance The instance to be registered.
+     */
+    public static <T> void register(Class<T> clazz, T instance) {
+        registryMap.put(clazz, instance);
+    }
+
+    /**
+     * Retrieves the registered instance for a given class type.
+     * @param clazz The class type of the requested instance.
+     * @return The registered instance or null if not found.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getRegisteredInstance(Class<T> clazz) {
+        return (T) registryMap.get(clazz);
+    }
+}
+```
+
+### Paso 3: Implementar Bloqueos de Doble Verificación
+
+#### Double-Checked Locking for `QuantumSimulator`
+
+```java
+public class QuantumSimulator {
+    private static volatile QuantumSimulator instance;
+
+    private QuantumSimulator() {}
+
+    /**
+     * Returns the singleton instance of QuantumSimulator.
+     * @return The unique instance of QuantumSimulator.
+     */
+    public static QuantumSimulator getInstance() {
+        if (instance == null) {
+            synchronized (QuantumSimulator.class) {
+                if (instance == null) {
+                    instance = new QuantumSimulator();
+                }
+            }
+        }
+        return instance;
+    }
+
+    // Métodos públicos...
+}
+```
+
+### Paso 4: Optimización de Localidad de Caché
+
+#### Reducción del Contenido de Memoria en `FluidDynamicsEngine`
+
+```java
+public class FluidDynamicsEngine {
+    private double[] velocityField;
+
+    /**
+     * Initializes the velocity field with a given size.
+     * @param size The size of the velocity field to initialize.
+     */
+    public void initializeVelocityField(int size) {
+        this.velocityField = new double[size];
+        // Inicialización...
+    }
+
+    /**
+     * Updates the velocity at a specific index.
+     * @param dx The change in x-coordinate.
+     * @param dy The change in y-coordinate.
+     * @param index The index of the velocity field to update.
+     */
+    public void updateVelocity(double dx, double dy, int index) {
+        // Actualizar velocidad en la posición dada.
+    }
+}
+```
+
+#### Evitar Fragmentación de Memoria en `SimulationManager`
+
+```java
+public class SimulationManager {
+    private QuantumSimulator quantumSim;
+    private FluidDynamicsEngine fluidDyn;
+
+    /**
+     * Initializes the simulation components.
+     */
+    public void initialize() {
+        if (quantumSim == null) {
+            quantumSim = QuantumSimulator.getInstance();
+            ComponentRegistry.register(QuantumSimulator.class, quantumSim);
+        }
+        
+        if (fluidDyn == null) {
+            fluidDyn = new FluidDynamicsEngine();
+            ComponentRegistry.register(FluidDynamicsEngine.class, fluidDyn);
+        }
+    }
+
+    // Otros métodos...
+}
+```
+
+### Pruebas y Validación
+
+- Implementar pruebas unitarias para verificar que el singleton se inicia correctamente.
+- Asegurarse de que la localidad de caché (L1/L2 Hits) mejora en mediciones de rendimiento.
+
+Este código proporciona una base sólida para mejorar la estructura y eficiencia del sistema, asegurando su preparación para futuras mejoras sin comprometer su integridad funcional.
