@@ -1,0 +1,115 @@
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <list>
+#include <stack>
+#include <queue>
+
+// Clase TAD para manejar la búsqueda de subcadenas en palabras
+class SubcadenaBusqueda {
+private:
+    std::vector<std::pair<int, std::string>> lineasTexto; // Guarda las líneas del archivo y sus contenidos
+
+public:
+    void cargarArchivo(const std::string& nombreArchivo) {
+        std::ifstream archivo(nombreArchivo);
+        int n;
+        archivo >> n;
+
+        for (int i = 0; i < n; ++i) {
+            std::string linea;
+            std::getline(archivo, linea);
+            lineasTexto.push_back({i + 1, linea});
+        }
+    }
+
+    void buscarSubcadena(const std::string& subcadena) {
+        std::list<std::pair<int, std::string>> comienzanPor = {};
+        std::list<std::pair<int, std::string>> contiene = {};
+        std::list<std::pair<int, std::string>> contieneInvertida = {};
+
+        for (const auto& linea : lineasTexto) {
+            if (linea.second.substr(0, subcadena.size()) == subcadena)
+                comienzanPor.push_back(linea);
+
+            if (linea.second.find(subcadena) != std::string::npos)
+                contiene.push_back(linea);
+
+            std::string invertida = subcadena;
+            std::reverse(invertida.begin(), invertida.end());
+            if (linea.second.rfind(invertida, 0) == 0 || linea.second.rfind(invertida) != std::string::npos)
+                contieneInvertida.push_back(linea);
+        }
+
+        imprimirResultados(comienzanPor, "Comienzan por");
+        imprimirResultados(contiene, "Contienen");
+        imprimirResultados(contieneInvertida, "Contienen invertida");
+    }
+
+private:
+    void imprimirResultados(const std::list<std::pair<int, std::string>>& resultados, const std::string& tipo) {
+        if (resultados.empty()) return;
+
+        std::cout << tipo << ": " << resultados.size() << "\n";
+        for (const auto& resultado : resultados)
+            std::cout << "Línea: " << resultado.first << ", Palabra: \"" << resultado.second << "\"\n";
+    }
+};
+
+int main(int argc, char* argv[]) {
+    if (argc != 3) return -1;
+
+    SubcadenaBusqueda buscador;
+    buscador.cargarArchivo(argv[1]);
+    buscador.buscarSubcadena(argv[2]);
+
+    return 0;
+}
+```
+
+```cpp
+// Archivo: subcadena_busqueda.h
+
+#ifndef SUBCADENA_BUSQUEDA_H
+#define SUBCADENA_BUSQUEDA_H
+
+#include <vector>
+#include <list>
+
+class SubcadenaBusqueda {
+private:
+    std::vector<std::pair<int, std::string>> lineasTexto;
+
+public:
+    void cargarArchivo(const std::string& nombreArchivo);
+    void buscarSubcadena(const std::string& subcadena);
+
+private:
+    void imprimirResultados(const std::list<std::pair<int, std::string>>& resultados, const std::string& tipo);
+};
+
+#endif // SUBCADENA_BUSQUEDA_H
+```
+
+```cpp
+// Archivo: main.cpp
+
+#include "subcadena_busqueda.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+
+int main(int argc, char* argv[]) {
+    if (argc != 3) return -1;
+
+    SubcadenaBusqueda buscador;
+    buscador.cargarArchivo(argv[1]);
+    buscador.buscarSubcadena(argv[2]);
+
+    return 0;
+}
+```
+
+Este código implementa una clase `SubcadenaBusqueda` que permite cargar un archivo de texto y buscar palabras basadas en subcadenas, mostrando las líneas donde se encuentran estas palabras. Se utilizan estructuras lineales como listas para almacenar los resultados de cada tipo de búsqueda (que comienzan por la subcadena, que contienen la subcadena, y que contienen la subcadena invertida).
