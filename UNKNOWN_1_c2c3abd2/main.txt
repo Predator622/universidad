@@ -1,0 +1,252 @@
+--FILE: src/main/java/com/quantum_simulation/core/SimulationManager.java
+package com.quantum_simulation.core;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class SimulationManager {
+    private static volatile SimulationManager instance;
+    private final Lock lock = new ReentrantLock();
+
+    private SimulationManager() {}
+
+    public static SimulationManager getInstance() {
+        if (instance == null) {
+            synchronized (SimulationManager.class) {
+                if (instance == null) {
+                    instance = new SimulationManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    // Métodos públicos...
+}
+
+--FILE: src/main/java/com/quantum_simulation/core/QuantumSimulator.java
+package com.quantum_simulation.core;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class QuantumSimulator {
+    private static volatile QuantumSimulator instance;
+    private final Lock lock = new ReentrantLock();
+
+    private QuantumSimulator() {}
+
+    public static QuantumSimulator getInstance() {
+        if (instance == null) {
+            synchronized (QuantumSimulator.class) {
+                if (instance == null) {
+                    instance = new QuantumSimulator();
+                }
+            }
+        }
+        return instance;
+    }
+
+    // Métodos públicos...
+}
+
+--FILE: src/main/java/com/quantum_simulation/core/FluidDynamicsEngine.java
+package com.quantum_simulation.core;
+
+public class FluidDynamicsEngine {
+    private double[] velocityField;
+
+    public void initializeVelocityField(int size) {
+        this.velocityField = new double[size];
+        // Inicialización...
+    }
+
+    public void updateVelocity(double dx, double dy, int index) {
+        // Actualizar velocidad en la posición dada.
+    }
+}
+
+--FILE: src/main/java/com/quantum_simulation/registry/ComponentRegistry.java
+package com.quantum_simulation.registry;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class ComponentRegistry {
+    private static final Map<Class<?>, Object> registryMap;
+
+    static {
+        registryMap = new ConcurrentHashMap<>();
+    }
+
+    public static <T> void register(Class<T> clazz, T instance) {
+        registryMap.put(clazz, instance);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getRegisteredInstance(Class<T> clazz) {
+        return (T) registryMap.get(clazz);
+    }
+}
+
+--FILE: src/test/java/com/quantum_simulation/core/SimulationManagerTest.java
+package com.quantum_simulation.core;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class SimulationManagerTest {
+
+    @Test
+    public void testSingletonInstance() {
+        SimulationManager instance1 = SimulationManager.getInstance();
+        SimulationManager instance2 = SimulationManager.getInstance();
+
+        assertSame(instance1, instance2);
+    }
+
+    // Otros tests...
+}
+
+--FILE: src/test/java/com/quantum_simulation/core/QuantumSimulatorTest.java
+package com.quantum_simulation.core;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class QuantumSimulatorTest {
+
+    @Test
+    public void testSingletonInstance() {
+        QuantumSimulator instance1 = QuantumSimulator.getInstance();
+        QuantumSimulator instance2 = QuantumSimulator.getInstance();
+
+        assertSame(instance1, instance2);
+    }
+
+    // Otros tests...
+}
+
+--FILE: src/test/java/com/quantum_simulation/core/FluidDynamicsEngineTest.java
+package com.quantum_simulation.core;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class FluidDynamicsEngineTest {
+
+    @Test
+    public void testVelocityFieldInitialization() {
+        FluidDynamicsEngine engine = new FluidDynamicsEngine();
+        int size = 100;
+        engine.initializeVelocityField(size);
+
+        assertNotNull(engine.velocityField);
+        assertEquals(size, engine.velocityField.length);
+    }
+
+    // Otros tests...
+}
+
+--FILE: src/test/java/com/quantum_simulation/registry/ComponentRegistryTest.java
+package com.quantum_simulation.registry;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ComponentRegistryTest {
+
+    @Test
+    public void testRegisterAndGet() {
+        String key = "testKey";
+        Object value = new Object();
+
+        ComponentRegistry.register(String.class, value);
+        Object retrievedValue = ComponentRegistry.getRegisteredInstance(String.class);
+
+        assertNotNull(retrievedValue);
+        assertEquals(value, retrievedValue);
+    }
+
+    // Otros tests...
+}
+
+--FILE: src/main/resources/documentation/README.md
+# Quantum Simulation Project
+
+## Overview
+This project is a simulation engine for quantum and fluid dynamics. It uses the Singleton pattern to manage global state and the Registry pattern to register components.
+
+## Setup
+1. Clone the repository.
+2. Run `mvn clean install` to build the project.
+3. Execute the main class from the `core` package.
+
+## Configuration
+Configuration files are located in `src/main/resources/configuration`.
+
+## Contributing
+Feel free to contribute by submitting pull requests or issues.
+
+
+--FILE: src/main/resources/configuration/application.properties
+# Application properties
+app.name=QuantumSimulationEngine
+app.version=1.0
+
+
+--FILE: src/main/resources/configuration/cache-settings.xml
+<cache>
+    <settings>
+        <maxSize>1024</maxSize>
+        <timeout>3600</timeout>
+    </settings>
+</cache>
+
+
+--FILE: pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.quantum_simulation</groupId>
+    <artifactId>QuantumSimulationEngine</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <!-- Add your dependencies here -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>optimization</id>
+            <properties>
+                <maven.compiler.optimize>true</maven.compiler.optimize>
+            </properties>
+        </profile>
+    </profiles>
+</project>
+
+
+
+META|LENGUAJE|JAVA|COMPLEJIDAD|MODERADA
