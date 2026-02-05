@@ -1,0 +1,154 @@
+import psycopg2
+from psycopg2 import pool
+
+class DatabaseConnection:
+    def __init__(self, db_config):
+        self.db_config = db_config
+        self.connection_pool = None
+
+    def create_connection_pool(self):
+        try:
+            self.connection_pool = psycopg2.pool.SimpleConnectionPool(
+                1,
+                10,
+                user=self.db_config['user'],
+                password=self.db_config['password'],
+                host=self.db_config['host'],
+                port=self.db_config['port'],
+                database=self.db_config['database']
+            )
+            if self.connection_pool:
+                print("Connection pool created successfully")
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(f"Error while connecting to PostgreSQL: {error}")
+
+    def get_connection(self):
+        try:
+            connection = self.connection_pool.getconn()
+            if connection:
+                print("Successfully received connection from connection pool ")
+            return connection
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(f"Error while getting connection from connection pool: {error}")
+            return None
+
+    def release_connection(self, connection):
+        try:
+            self.connection_pool.putconn(connection)
+            print("Connection returned to connection pool")
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(f"Error while returning connection to connection pool: {error}")
+
+    def close_all_connections(self):
+        try:
+            self.connection_pool.closeall()
+            print("All connections in the pool are closed")
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(f"Error while closing all connections in the pool: {error}")
+
+class CollaborativeFiltering:
+    def __init__(self, database):
+        self.database = database
+
+    def get_recommendations(self, user_id):
+        # Implement collaborative filtering logic here
+        connection = self.database.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                query = "SELECT * FROM collaborative_filter WHERE user_id = %s"
+                cursor.execute(query, (user_id,))
+                results = cursor.fetchall()
+                return results
+        finally:
+            self.database.release_connection(connection)
+
+class ContentBasedFiltering:
+    def __init__(self, database):
+        self.database = database
+
+    def get_recommendations(self, user_profile):
+        # Implement content-based filtering logic here
+        connection = self.database.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                query = "SELECT * FROM content_based_filter WHERE profile LIKE %s"
+                cursor.execute(query, (user_profile,))
+                results = cursor.fetchall()
+                return results
+        finally:
+            self.database.release_connection(connection)
+
+class HybridFiltering:
+    def __init__(self, database):
+        self.database = database
+
+    def get_recommendations(self, user_id, user_profile):
+        # Implement hybrid filtering logic here
+        connection = self.database.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                query = "SELECT * FROM hybrid_filter WHERE user_id = %s AND profile LIKE %s"
+                cursor.execute(query, (user_id, user_profile))
+                results = cursor.fetchall()
+                return results
+        finally:
+            self.database.release_connection(connection)
+
+class FlaskAPI:
+    def __init__(self):
+        # Initialize database connection
+        db_config = {
+            'user': 'your_user',
+            'password': 'your_password',
+            'host': 'localhost',
+            'port': '5432',
+            'database': 'your_database'
+        }
+        self.database_connection = DatabaseConnection(db_config)
+        self.database_connection.create_connection_pool()
+
+        # Initialize recommendation algorithms
+        self.collaborative_filtering = CollaborativeFiltering(self.database_connection)
+        self.content_based_filtering = ContentBasedFiltering(self.database_connection)
+        self.hybrid_filtering = HybridFiltering(self.database_connection)
+
+    def run(self):
+        app = Flask(__name__)
+        app.config['JWT_SECRET_KEY'] = 'your-secret-key'
+        jwt = JWTManager(app)
+
+        @app.route('/login', methods=['POST'])
+        def login():
+            username = request.json.get('username')
+            password = request.json.get('password')
+            # Validate credentials
+            if username == 'admin' and password == 'admin':
+                access_token = create_access_token(identity=username)
+                return jsonify(access_token=access_token), 200
+            else:
+                return jsonify({"msg": "Bad username or password"}), 401
+
+        @app.route('/recommendations/collaborative', methods=['GET'])
+        @jwt_required()
+        def get_collaborative_recommendations():
+            user_id = request.args.get('user_id')
+            recommendations = self.collaborative_filtering.get_recommendations(user_id)
+            return jsonify(recommendations)
+
+        @app.route('/recommendations/content-based', methods=['GET'])
+        @jwt_required()
+        def get_content_based_recommendations():
+            user_profile = request.args.get('profile')
+            recommendations = self.content_based_filtering.get_recommendations(user_profile)
+            return jsonify(recommendations)
+
+        @app.route('/recommendations/hybrid', methods=['GET'])
+        @jwt_required()
+        def get_hybrid_recommendations():
+            user_id = request.args.get('user_id')
+            user_profile = request.args.get('profile')
+            recommendations = self.hybrid_filtering.get_recommendations(user_id, user_profile)
+            return jsonify(recommendations)
+
+        if __name__ == '__main__':
+            app.run(debug=True, ssl_context='adhoc')
