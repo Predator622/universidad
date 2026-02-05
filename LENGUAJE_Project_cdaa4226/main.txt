@@ -1,0 +1,185 @@
+-- SQL Homework Assignment
+
+---
+
+#### 1. Explaining Tables and Relationships
+
+**Tables:**
+- **country**: Contains information about countries, including their names, codes, populations, surface areas, etc.
+- **city**: Contains details about cities, linked to the `country` table via `countrycode`.
+- **countrylanguage**: Records languages spoken in each country, also linked by `countrycode`.
+
+**Relationships:**
+- Each country can have multiple cities (`country` to `city` via `countrycode`).
+- Each country can have multiple languages (`country` to `countrylanguage` via `countrycode`).
+
+---
+
+#### 2. Basic Queries
+
+**a) List Different Types of Governments in the World Without Repetition**
+
+SELECT DISTINCT governmentform 
+FROM country;
+
+**b) Find Cities in Australia**
+
+SELECT name 
+FROM city 
+WHERE countrycode = (SELECT code FROM country WHERE name = 'Australia');
+
+**c) Countries with Population Over 30 Million, Ordered from Smallest to Largest**
+
+SELECT name 
+FROM country 
+WHERE population > 30000000 
+ORDER BY population ASC;
+
+**d) Countries with Area Greater Than 1.000.000 and Population Less Than 20.000.000**
+
+SELECT name 
+FROM country 
+WHERE surfacearea > 1000000 AND population < 20000000;
+
+---
+
+#### 3. String Searches
+
+**a) Exact Match: Colombia**
+
+SELECT name FROM city WHERE name = 'Colombia';
+
+**b) Omitting Part of the Name: LIKE Colom%**
+
+SELECT name FROM city WHERE name LIKE 'Colom%';
+
+**c) Omitting a Character: LIKE Co_o__ia**
+
+SELECT name FROM city WHERE name LIKE 'Co_o__ia';
+
+**d) Result of:**
+SELECT name FROM city WHERE district LIKE '%Aires%' AND name NOT LIKE '%La Plata%';
+*Result will show cities in districts containing "Aires" but not named "La Plata".*
+
+---
+
+#### 4. Numeric Searches
+
+**a) Example Query Execution and Explanation:**
+SELECT name FROM city WHERE population > 5000000;
+*This query lists all cities with a population greater than 5 million.*
+
+**b) Aggregate Functions Examples:**
+- **MAX (population) FROM city;**
+  *Finds the maximum population among all cities.*
+  
+- **AVG(surfacearea) FROM country;**
+  *Calculates the average surface area of countries.*
+
+---
+
+#### 5. Queries with Conditions
+
+**a) Top 5 Most Densely Populated Countries:**
+SELECT name, (population / surfacearea) AS PopulationDensity 
+FROM country 
+ORDER BY PopulationDensity DESC 
+LIMIT 5;
+
+**b) Countries with Surface Area Less Than 1/5 of the Global Average:**
+WITH GlobalAverages AS (
+    SELECT AVG(surfacearea) AS GlobalSurfaceArea 
+    FROM country
+)
+SELECT name, surfacearea 
+FROM country c, GlobalAverages ga 
+WHERE surfacearea < (ga.GlobalSurfaceArea / 5);
+
+**c) World Average Life Expectancy:**
+SELECT AVG(lifeexpectancy) AS WorldAverageLifeExpectancy 
+FROM country;
+
+**d) Continent Statistics:**
+SELECT continent, COUNT(*) AS NumberOfCountries, AVG(population) AS AveragePopulation 
+FROM country 
+GROUP BY continent 
+ORDER BY continent ASC;
+
+---
+
+#### 6. Advanced Queries
+
+**a) Continents with High-Population Countries (More Than 100 Million):**
+WITH CountryPopulations AS (
+    SELECT continent, population 
+    FROM country 
+)
+SELECT continent, COUNT(*) AS NumberOfCountriesWithHighPop, SUM(population) AS TotalPopulation 
+FROM CountryPopulations 
+WHERE population > 100000000 
+GROUP BY continent;
+
+**b) Countries Where English is the Official Language and Spoken by More Than 50% of the Population:**
+WITH OfficialEnglish AS (
+    SELECT c.name, cl.language, ci.population AS CityPopulation, c.population AS CountryPopulation 
+    FROM country c 
+    JOIN countrylanguage cl ON c.code = cl.countrycode 
+    JOIN city ci ON c.code = ci.countrycode 
+    WHERE cl.language = 'English' AND cl.isofficial = 't'
+)
+SELECT DISTINCT name 
+FROM OfficialEnglish 
+WHERE (CityPopulation / CountryPopulation) * 100 > 50;
+
+---
+
+#### 7. Queries Across Multiple Tables
+
+**a) Each Country with Average Population Between Known and Calculated:**
+SELECT c.name, AVG(c.population), SUM(ci.population) AS CityPopulationSum 
+FROM country c 
+JOIN city ci ON c.code = ci.countrycode 
+GROUP BY c.name;
+
+**b) Countries Where English is the Official Language:**
+SELECT c.name 
+FROM country c 
+JOIN countrylanguage cl ON c.code = cl.countrycode 
+WHERE cl.language = 'English' AND cl.isofficial = 't';
+
+**c) Each Country with Official Language, Number of Cities, and Most Populous City (Excluding Countries with Less Than 5 Cities):**
+SELECT c.name, cl.language AS OfficialLanguage, COUNT(ci.name) AS NumberOfCities, MAX(ci.population) AS LargestCityPopulation 
+FROM country c 
+JOIN countrylanguage cl ON c.code = cl.countrycode 
+JOIN city ci ON c.code = ci.countrycode 
+WHERE cl.isofficial = 't' 
+GROUP BY c.name, cl.language 
+HAVING COUNT(ci.name) >= 5;
+
+**d) Countries Where Official Language is Spoken by Less Than 30% and Has a City Representing More Than 50% of the Population:**
+WITH LangPop AS (
+    SELECT c.name, cl.language, (cl.percentage / 100) * c.population AS LangPopulation 
+    FROM country c 
+    JOIN countrylanguage cl ON c.code = cl.countrycode 
+    WHERE cl.isofficial = 't'
+),
+CityPop AS (
+    SELECT c.name, ci.name AS CityName, ci.population AS CityPopulation, c.population AS CountryPopulation 
+    FROM country c 
+    JOIN city ci ON c.code = ci.countrycode
+)
+SELECT lp.name AS CountryName, lp.language AS OfficialLanguage, cp.CityName 
+FROM LangPop lp 
+JOIN CityPop cp ON lp.name = cp.name 
+WHERE lp.LangPopulation < 0.3 * cp.CountryPopulation AND cp.CityPopulation > 0.5 * cp.CountryPopulation;
+
+---
+
+### Summary
+
+This document outlines the SQL queries and explanations for each part of the homework assignment, focusing on basic to advanced querying techniques. Each query is designed to demonstrate understanding of joins, aggregate functions, string manipulations, and complex conditions.
+
+
+
+**
+META|SQL|8
