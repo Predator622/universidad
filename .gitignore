@@ -1,11 +1,10 @@
-# --- Carpetas del pipeline (NO deben ir a GitHub) ---
-pendientes/
-completados/
-error_dump/
-_CUARENTENA/
-.sys_cache/
-
-# Por si quedan archivos sueltos
-desktop.ini
-Thumbs.db
-.DS_Store
+/sys_cache/
+/.sys_cache/
+/_CUARENTENA/
+/quarantine/
+/pendientes/
+/completados/
+/error_dump/
+*.log
+*.tmp
+__pycache__/
