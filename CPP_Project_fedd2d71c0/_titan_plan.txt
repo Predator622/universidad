@@ -1,0 +1,86 @@
+### 1. Lista de Archivos y Roles
+
+**Archivos:**
+- `main.cpp`: Contiene la función principal que maneja la entrada del usuario, lectura del archivo, y llamadas a funciones para buscar palabras.
+- `utils.h`: Encabezado con declaraciones de utilidades como funciones auxiliares y estructuras de datos necesarias.
+- `utils.cpp`: Implementación de las funciones definidas en `utils.h`.
+- `buscador_palabras.h`: Definición del TAD (Tipo Abstracto de Datos) para el buscador de palabras, incluyendo métodos para buscar por subcadena al inicio, dentro y invertida.
+- `buscador_palabras.cpp`: Implementación del TAD definido en `buscador_palabras.h`.
+
+**Roles:**
+- **main.cpp**: Maneja la entrada/salida estándar, lectura de archivos y ejecución de las funciones principales.
+- **utils.h/cpp**: Contiene funciones auxiliares para procesamiento de cadenas y estructuras de datos necesarias.
+- **buscador_palabras.h/cpp**: Implementa el TAD que realiza la búsqueda de palabras en función de subcadenas.
+
+### 2. Decisiones Técnicas Clave
+
+1. **Uso de Estructuras Lineales:** Se utilizaron `std::list` para almacenar las líneas del archivo y `std::stack` para manipular cadenas durante el procesamiento.
+2. **Lectura de Archivos:** La lectura se realiza línea por línea, asegurando que cada línea sea tratada individualmente antes de buscar subcadenas.
+3. **Validaciones:** Se implementaron validaciones básicas en la función principal para manejar errores comunes como archivos no existentes o cadenas vacías.
+
+### 3. Checklist REQ_XX -> Dónde se Cubre (Archivo/Función)
+
+- **REQ_01, REQ_02, REQ_04, REQ_05:** `main.cpp` y `utils.h/cpp`.
+    - Se asegura que el código sea compilado correctamente con g++.
+- **REQ_03, REQ_06, REQ_07:** `main.cpp`
+    - Maneja la ejecución del programa desde la línea de comandos.
+- **REQ_08:** `buscador_palabras.h/cpp` y `utils.h/cpp`.
+    - Implementa el diseño e implementación de las estructuras lineales necesarias para buscar palabras por subcadena.
+- **REQ_10, REQ_11, REQ_12:** `buscador_palabras.cpp`
+    - Implementa los métodos que buscan palabras que comienzan con la subcadena, contienen la subcadena y contienen la subcadena invertida.
+- **REQ_13:** No aplica directamente a este diseño, pero se refiere a un ejemplo de uso del programa.
+- **REQ_14:** `main.cpp`
+    - Maneja la ejecución del programa con los parámetros correctos desde la línea de comandos.
+- **REQ_15:** El archivo comprimido `.zip` contiene todos los archivos necesarios para compilar y ejecutar el programa.
+- **REQ_16:** No aplica directamente a este diseño, pero se refiere a una evaluación individual del trabajo.
+
+### Implementación Ejemplo
+
+#### `main.cpp`
+#include <iostream>
+#include <fstream>
+#include "utils.h"
+#include "buscador_palabras.h"
+
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        std::cerr << "Uso: ./mi_programa archivo.txt subcadena" << std::endl;
+        return -1;
+    }
+
+    std::string filename = argv[1];
+    std::string substring = argv[2];
+
+    // Leer el archivo y procesar las líneas
+    std::vector<std::pair<int, std::string>> lines = read_file(filename);
+
+    BuscadorPalabras buscador(substring);
+    
+    // Búsqueda de palabras que comienzan con la subcadena
+    auto resultados_inicio = buscador.buscarPorInicio(lines);
+    imprimirResultados(resultados_inicio, "Comienzan por");
+
+    // Búsqueda de palabras que contienen la subcadena
+    auto resultados_contienen = buscador.buscarContiene(substring, lines);
+    imprimirResultados(resultados_contienen, "Contienen");
+
+    // Búsqueda de palabras que contienen la subcadena invertida
+    std::string substring_invertido = invertirCadena(substring);
+    auto resultados_invertidos = buscador.buscarInverso(substring_invertido, lines);
+    imprimirResultados(resultados_invertidos, "Contienen Invertido");
+
+    return 0;
+}
+
+#### `buscador_palabras.h`
+#ifndef BUSCADOR_PALABRAS_H
+#define BUSCADOR_PALABRAS_H
+
+#include <string>
+#include <list>
+
+class BuscadorPalabras {
+public:
+    BuscadorPalabras(const std::string& subcadena);
+    
+    // Métodos para buscar palabras por subcadena

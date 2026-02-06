@@ -1,0 +1,112 @@
+{
+  "id_task": "Project_cdaa42264a",
+  "version_titan": "V80_PRIVATE_QUALITY",
+  "fecha": "2026-02-06T09:10:10.804671",
+  "lenguaje": "SQL_ORACLE",
+  "nivel_estimado": "6",
+  "score": 76,
+  "score_reasons": [
+    "Muy pocos archivos."
+  ],
+  "artefacto": {
+    "nombre": "Taller 2 - SQL 1.pdf",
+    "hash_md5": "c81378df13a671ffa71691a65e02b718",
+    "copiado_al_repo": false
+  },
+  "modelos": {
+    "coder": "qwen2.5-coder:14b",
+    "cerebro": "qwen2.5:14b-instruct",
+    "auditor": "qwen2.5:14b-instruct",
+    "cronista": "qwen2.5:14b-instruct",
+    "clasificador": "llama3.1:8b-instruct"
+  },
+  "config": {
+    "fast": false,
+    "coder": {
+      "keep_alive": "120s",
+      "num_ctx": 8192,
+      "num_predict": 3072
+    },
+    "cerebro": {
+      "keep_alive": "120s",
+      "num_ctx": 8192,
+      "num_predict": 1100
+    },
+    "auditor": {
+      "keep_alive": "90s",
+      "num_ctx": 4096,
+      "num_predict": 800
+    },
+    "cronista": {
+      "keep_alive": "90s",
+      "num_ctx": 4096,
+      "num_predict": 800
+    },
+    "clasificador": {
+      "keep_alive": "60s",
+      "num_ctx": 2048,
+      "num_predict": 180
+    }
+  },
+  "archivos_generados": [
+    "main.sql"
+  ],
+  "requisitos_extraidos": [
+    "REQ_01: Taller 2 - Consultas SQL",
+    "REQ_02: documento en formato pdf con la respuesta a cada pregunta, así como el código de cada consulta",
+    "REQ_03: y el resultado en pantalla de la respuesta que se obtiene con la consulta,",
+    "REQ_04: Adicionalmente todas las consultas deberán ser entregadas en un script .sql",
+    "REQ_05: Consultas SQL:",
+    "REQ_06: Cada consulta que se explique debe tener un pantallazo del resultado, donde se muestre la tabla",
+    "REQ_07: 1) Usar Base de Datos del Grupo",
+    "REQ_08: a) Cargar el archivo DB_world.sql",
+    "REQ_09: i) Primero bajar los archivos 01-DDL.sql y 02-Data_Insert.sql",
+    "REQ_10: b) Verificar si los datos fueron cargados",
+    "REQ_11: i) DESCRIBE country;",
+    "REQ_12: c) Verificar si tienen datos",
+    "REQ_13: i) SELECT * FROM country;",
+    "REQ_14: ii) SELECT * FROM city;",
+    "REQ_15: iii) SELECT * FROM countrylanguage;",
+    "REQ_16: Pregunta: Explique las tablas y que relación existen entre ellas.",
+    "REQ_17: 2) Búsqueda básica",
+    "REQ_18: •",
+    "REQ_19: •",
+    "REQ_20: •",
+    "REQ_21: •",
+    "REQ_22: 3) Búsqueda de Strings",
+    "REQ_23: siguientes consultas:",
+    "REQ_24: •",
+    "REQ_25: Consulta Exacta: = ‘Colombia’",
+    "REQ_26: •",
+    "REQ_27: Consulta omitiendo una parte: LIKE ‘Colom%’",
+    "REQ_28: •",
+    "REQ_29: Consulta omitiendo un carácter: LIKE ‘Co_o__ia’",
+    "REQ_30: Pregunta: Cuál es el resultado de:",
+    "REQ_31: SELECT name FROM city WHERE district LIKE '%Aires%' AND name NOT LIKE '%La",
+    "REQ_32: •",
+    "REQ_33: •",
+    "REQ_34: •",
+    "REQ_35: •"
+  ],
+  "defensa": {
+    "conceptos": [
+      "Uso de Oracle SQL Developer",
+      "Estructura modular del script .sql",
+      "Inclusión de pantallazos para consultas relevantes"
+    ],
+    "preguntas": [
+      "¿Cuáles son las decisiones técnicas clave tomadas en este proyecto?",
+      "¿Qué archivos se incluyen y cuál es su propósito?",
+      "¿Cómo está estructurado el script .sql?",
+      "¿Cuáles son los requisitos específicos que deben cumplirse según la tabla REQ_XX?",
+      "¿Cómo se verifica si los datos fueron cargados correctamente?"
+    ],
+    "respuestas": [
+      "Se seleccionó Oracle SQL Developer por su facilidad en manejar scripts y visualizar resultados.",
+      "Incluye un documento PDF con respuestas, script SQL con consultas, DDL para crear estructura de base de datos y archivo de inserción de datos.",
+      "El script .sql está organizado en secciones claramente definidas: carga de DDL e inserción de datos, verificación de tablas y datos, consultas básicas, consultas con LIKE y funciones sobre strings.",
+      "Los requisitos incluyen la entrega de un documento PDF con respuestas a preguntas y resultados, todas las consultas en un script .sql, pantallazos para cada consulta relevante y uso de una base de datos específica.",
+      "Se verifica la carga de datos ejecutando comandos como DESCRIBE y SELECT * FROM para asegurar que los datos están presentes."
+    ]
+  }
+}

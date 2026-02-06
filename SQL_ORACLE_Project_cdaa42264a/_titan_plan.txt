@@ -1,0 +1,68 @@
+### 1. Lista de Archivos
+
+- `taller_sql.pdf`: Documento PDF con respuestas a las preguntas, código SQL y resultados en pantalla.
+- `script.sql`: Script SQL que contiene todas las consultas realizadas para el taller.
+- `01-DDL.sql`: DDL (Data Definition Language) para crear estructura de base de datos.
+- `02-Data_Insert.sql`: Data Insert para poblar la base de datos con datos iniciales.
+
+### 2. Decisiones Técnicas Clave
+
+- **Uso de Oracle SQL Developer**: Se seleccionó esta herramienta por su facilidad en manejar scripts y visualizar resultados directamente.
+- **Estructura Modular del Script .sql**: Cada sección (descripción, verificación, consultas) está bien organizada para facilitar la revisión y mantenimiento.
+- **Incluir Pantallazos de Resultados**: Para cada consulta compleja o relevante, se incluirán pantallazos que muestran los resultados obtenidos.
+
+### 3. Checklist REQ_XX
+
+| Requisito | Descripción | Archivo/Función |
+|-----------|-------------|-----------------|
+| REQ_01    | Taller 2 - Consultas SQL | taller_sql.pdf, script.sql |
+| REQ_02    | Documento en formato pdf con la respuesta a cada pregunta | taller_sql.pdf |
+| REQ_03    | Código de consulta y resultado en pantalla | taller_sql.pdf |
+| REQ_04    | Todas las consultas deberán ser entregadas en un script .sql | script.sql |
+| REQ_05    | Consultas SQL: Cada consulta que se explique debe tener un pantallazo del resultado | taller_sql.pdf, script.sql |
+| REQ_06    | Pantallazos de resultados para cada consulta relevante | taller_sql.pdf |
+| REQ_07    | Usar Base de Datos del Grupo | 01-DDL.sql, 02-Data_Insert.sql, script.sql |
+| REQ_08    | Cargar el archivo DB_world.sql | 01-DDL.sql, 02-Data_Insert.sql |
+| REQ_09    | Bajar archivos 01-DDL.sql y 02-Data_Insert.sql | 01-DDL.sql, 02-Data_Insert.sql |
+| REQ_10    | Verificar si los datos fueron cargados | script.sql |
+| REQ_11    | DESCRIBE country; | script.sql |
+| REQ_12    | Verificar si tienen datos | script.sql |
+| REQ_13    | SELECT * FROM country; | script.sql |
+| REQ_14    | SELECT * FROM city; | script.sql |
+| REQ_15    | SELECT * FROM countrylanguage; | script.sql |
+| REQ_16    | Explique las tablas y que relación existen entre ellas. | taller_sql.pdf, script.sql |
+| REQ_17    | Búsqueda básica: Ejecutar consultas básicas de búsqueda | script.sql |
+| REQ_18-21 | Consultas específicas para encontrar diferentes tipos de gobierno, ciudades de Australia, países con población mayor a 30 millones y áreas superiores a 1 millón con poblaciones menores a 20 millones. | script.sql |
+| REQ_22    | Búsqueda de Strings: Ejecutar consultas utilizando LIKE | script.sql |
+| REQ_23-25 | Consulta Exacta, Omitiendo una parte y un carácter | script.sql |
+| REQ_26    | Resultado específico para consulta con LIKE '%Aires%' AND name NOT LIKE '%La Plata%' | taller_sql.pdf, script.sql |
+| REQ_27-29 | Funciones sobre strings: LENGTH, CONCAT, LOWER, UPPER, RTRIM | script.sql |
+| REQ_30-34 | Consultas específicas para ciudades con una 'a', dos veces la letra 'a' sin 'e', y sólo un tipo de vocal en el nombre. | script.sql |
+
+### Estructura del Script .sql
+
+El archivo `script.sql` estará estructurado de la siguiente manera:
+
+1. **DDL y Data Insert**
+   - Carga de DDL
+   - Inserción de datos
+   
+2. **Verificación de Tablas y Datos**
+   - DESCRIBE country;
+   - DESCRIBE city;
+   - DESCRIBE countrylanguage;
+   
+3. **Consultas Básicas**
+   - Consulta para encontrar diferentes tipos de gobierno.
+   - Consulta para ciudades de Australia.
+   - Consulta para países con población mayor a 30 millones.
+   - Consulta para áreas superiores a 1 millón y poblaciones menores a 20 millones.
+
+4. **Consultas con LIKE**
+   - Ejemplos de consultas utilizando LIKE
+   - Consulta específica con LIKE '%Aires%' AND name NOT LIKE '%La Plata%'
+   
+5. **Funciones sobre Strings**
+   - Uso de LENGTH, CONCAT, LOWER, UPPER, RTRIM
+   
+6. **Consultas Específicas**

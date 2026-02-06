@@ -1,0 +1,100 @@
+{
+  "id_task": "Project_fedd2d71c0",
+  "version_titan": "V80_PRIVATE_QUALITY",
+  "fecha": "2026-02-06T05:00:47.305824",
+  "lenguaje": "CPP",
+  "nivel_estimado": "6",
+  "score": 70,
+  "score_reasons": [
+    "Cobertura heurística débil."
+  ],
+  "artefacto": {
+    "nombre": "taller_2_estructuras_lineales.pdf",
+    "hash_md5": "5a027ee10ebce9b0ffcaa272e252ea18",
+    "copiado_al_repo": false
+  },
+  "modelos": {
+    "coder": "qwen2.5-coder:14b",
+    "cerebro": "qwen2.5:14b-instruct",
+    "auditor": "qwen2.5:14b-instruct",
+    "cronista": "qwen2.5:14b-instruct",
+    "clasificador": "llama3.1:8b-instruct"
+  },
+  "config": {
+    "fast": false,
+    "coder": {
+      "keep_alive": "120s",
+      "num_ctx": 8192,
+      "num_predict": 3072
+    },
+    "cerebro": {
+      "keep_alive": "120s",
+      "num_ctx": 8192,
+      "num_predict": 1100
+    },
+    "auditor": {
+      "keep_alive": "90s",
+      "num_ctx": 4096,
+      "num_predict": 800
+    },
+    "cronista": {
+      "keep_alive": "90s",
+      "num_ctx": 4096,
+      "num_predict": 800
+    },
+    "clasificador": {
+      "keep_alive": "60s",
+      "num_ctx": 2048,
+      "num_predict": 180
+    }
+  },
+  "archivos_generados": [
+    "main.cpp",
+    "utils.h",
+    "utils.cpp",
+    "buscador_palabras.h",
+    "buscador_palabras.cpp"
+  ],
+  "requisitos_extraidos": [
+    "REQ_01: 1.",
+    "REQ_02: Disenar e implementar una aplicación que usa estructuras lineales para buscar palabras a partir de subcadenas. En",
+    "REQ_03: 2.",
+    "REQ_04: 1. Compilación: de todo el código fuente compilable (ÚNICAMENTE LOS ARCHIVOS CON EXTENSIONES",
+    "REQ_05: 2. Encadenamiento: de todo el código de bajo nivel en el archivo ejecutable",
+    "REQ_06: 3. Ejecución: del programa ejecutable anteriormente generado",
+    "REQ_07: 2.1.",
+    "REQ_08: 3.",
+    "REQ_09: El objetivo de este taller es diseñar (utilizando la plantilla de diseño de TADs vista en clase) e implementar un programa",
+    "REQ_10: imprimir en pantalla la cantidad de palabras que comienzan por la subcadena, y listar cada palabra encontrada",
+    "REQ_11: (no pueden sobrar letras de la subcadena en la palabra). Se debe listar cada palabra encontrada indicando su número",
+    "REQ_12: la palabra). Se debe listar cada palabra indicando su número de línea en el texto.",
+    "REQ_13: 3.1.",
+    "REQ_14: 4.",
+    "REQ_15: 1. (60 %) Resultado del trabajo en grupo (archivo comprimido): que contiene lo solicitado para la evaluación.",
+    "REQ_16: 2. (40 %) Evaluación individual del resultado del taller: cada estudiante, de forma individual, deberá responder"
+  ],
+  "defensa": {
+    "conceptos": [
+      "Uso de estructuras lineales",
+      "Lectura de archivos línea por línea",
+      "Validaciones básicas para manejo de errores",
+      "Implementación de TADs en C++",
+      "Manipulación y procesamiento de cadenas",
+      "Impresión de resultados formateados"
+    ],
+    "preguntas": [
+      "¿Cómo se implementa la lectura de archivos línea por línea?",
+      "¿Qué estructuras lineales se utilizan en el código y para qué?",
+      "¿Cuál es la función principal del archivo 'buscador_palabras.cpp'?",
+      "¿Cómo se manejan las subcadenas invertidas en el programa?",
+      "¿Qué tipo de validaciones se implementan en main.cpp?"
+    ],
+    "respuestas": [
+      "La lectura de archivos línea por línea se realiza utilizando std::ifstream y std::getline() para procesar cada línea individualmente.",
+      "Se utilizan std::list para almacenar las líneas del archivo y std::stack para manipular cadenas durante el procesamiento, aunque en este caso específico se usó std::vector para almacenar las líneas con sus números de línea correspondientes.",
+      "El archivo 'buscador_palabras.cpp' implementa los métodos que buscan palabras que comienzan con la subcadena, contienen la subcadena y contienen la subcadena invertida.",
+      "Las subcadenas invertidas se manejan creando una versión invertida de la cadena original utilizando std::reverse() antes de buscarla en las líneas del archivo.",
+      "En main.cpp se implementan validaciones básicas para verificar que el número correcto de argumentos ha sido proporcionado y para manejar errores al abrir archivos."
+    ]
+  }
+}

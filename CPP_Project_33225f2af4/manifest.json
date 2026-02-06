@@ -1,0 +1,98 @@
+{
+  "id_task": "Project_33225f2af4",
+  "version_titan": "V80_PRIVATE_QUALITY",
+  "fecha": "2026-02-06T07:20:38.986411",
+  "lenguaje": "CPP",
+  "nivel_estimado": "5",
+  "score": 30,
+  "score_reasons": [
+    "Smoke tests fallaron.",
+    "Cobertura heurística débil."
+  ],
+  "artefacto": {
+    "nombre": "taller4_grafos.pdf",
+    "hash_md5": "a3da5d110633b60d421b713865eddd4a",
+    "copiado_al_repo": false
+  },
+  "modelos": {
+    "coder": "qwen2.5-coder:14b",
+    "cerebro": "qwen2.5:14b-instruct",
+    "auditor": "qwen2.5:14b-instruct",
+    "cronista": "qwen2.5:14b-instruct",
+    "clasificador": "llama3.1:8b-instruct"
+  },
+  "config": {
+    "fast": false,
+    "coder": {
+      "keep_alive": "120s",
+      "num_ctx": 8192,
+      "num_predict": 3072
+    },
+    "cerebro": {
+      "keep_alive": "120s",
+      "num_ctx": 8192,
+      "num_predict": 1100
+    },
+    "auditor": {
+      "keep_alive": "90s",
+      "num_ctx": 4096,
+      "num_predict": 800
+    },
+    "cronista": {
+      "keep_alive": "90s",
+      "num_ctx": 4096,
+      "num_predict": 800
+    },
+    "clasificador": {
+      "keep_alive": "60s",
+      "num_ctx": 2048,
+      "num_predict": 180
+    }
+  },
+  "archivos_generados": [
+    "main.cpp",
+    "graph.h",
+    "graph.cpp",
+    "dijkstra_algorithm.h",
+    "dijkstra_algorithm.cpp"
+  ],
+  "requisitos_extraidos": [
+    "REQ_01: 1. Compilación: de todo el código fuente compilable (ÚNICAMENTE LOS ARCHIVOS CON EXTENSIONES",
+    "REQ_02: 2. Encadenamiento: de todo el código de bajo nivel en el archivo ejecutable",
+    "REQ_03: 3. Ejecución: del programa ejecutable anteriormente generado",
+    "REQ_04: Se requiere entonces desarrollar un programa en C++ para calcular esta línea, a partir de una malla dada por el",
+    "REQ_05: 1. Estudiar el archivo de código fuente entregado. Es importante entender completamente los procesos allí descritos.",
+    "REQ_06: 2. Reemplazar las secciones de código marcadas como \u0010TODO\u0011 con las porciones de código adecuadas para el correcto",
+    "REQ_07: 1. (60%) Resultado del trabajo en grupo: el resultado del taller se evaluará con la siguiente escala:",
+    "REQ_08: 2. (40%) Evaluación individual del resultado del taller: cada estudiante, de forma individual, deberá responder",
+    "REQ_09: 6.1",
+    "REQ_10: 1. Las partes creadas con apoyo de herramientas de IA generativa deben identi\u001ccarse claramente a través de comen-",
+    "REQ_11: 2. La cantidad de contenido generado con apoyo de las herramientas de IA generativa no debería superar un tercio"
+  ],
+  "defensa": {
+    "conceptos": [
+      "Representación de grafos",
+      "Algoritmo Dijkstra",
+      "Lectura de archivos",
+      "Manejo de excepciones",
+      "Uso de colas prioridad",
+      "Documentación y pruebas"
+    ],
+    "preguntas": [
+      "¿Cómo se representa un grafo en C++?",
+      "¿Cuál es la función principal del algoritmo Dijkstra?",
+      "¿Cómo se lee un archivo en C++ para obtener datos de entrada?",
+      "¿Qué estructura de datos ayuda a implementar el algoritmo Dijkstra eficientemente?",
+      "¿Por qué es importante manejar excepciones en programas que leen archivos?",
+      "¿Cómo se documenta y prueba el código en este contexto?"
+    ],
+    "respuestas": [
+      "Un grafo se representa mediante una lista de adyacencia, donde cada vértice tiene una lista de sus vecinos con los pesos asociados.",
+      "El algoritmo Dijkstra encuentra la ruta más corta desde un nodo origen a todos los demás nodos en un grafo ponderado.",
+      "Se lee el archivo línea por línea utilizando objetos ifstream y se extraen datos específicos para construir el grafo.",
+      "Una cola de prioridad (priority_queue) ayuda a seleccionar siempre el vértice no visitado con la distancia más corta.",
+      "Manejar excepciones asegura que errores como archivos inexistentes o formatos incorrectos sean tratados adecuadamente, evitando fallos del programa.",
+      "Se documentan los archivos y funciones mediante comentarios claros. Las pruebas se realizan verificando el funcionamiento correcto de cada componente."
+    ]
+  }
+}

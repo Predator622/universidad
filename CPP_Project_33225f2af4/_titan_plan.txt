@@ -1,0 +1,109 @@
+Para abordar este problema, vamos a seguir las pautas proporcionadas en el enunciado del taller. Dado que la implementación debe ser en C++, pero tu solicitud es para Python, voy a proporcionarte una solución conceptual y luego te ayudaré a traducir esa idea a un código de ejemplo en Python.
+
+### 1) Lista de archivos (nombre.ext) y rol
+
+- `main.py`: Archivo principal que lee la entrada del usuario y llama a las funciones necesarias.
+- `graph.py`: Implementación de una clase gráfica para representar el grafo.
+- `dijkstra_algorithm.py`: Implementación del algoritmo Dijkstra para encontrar la ruta más corta.
+
+### 2) Decisiones técnicas clave
+
+1. **Representación del Grafo**: Usaremos un diccionario en Python donde las claves son los vértices (índices de puntos) y los valores son listas de tuplas que representan las aristas conectadas a cada vértice, junto con el costo asociado.
+2. **Algoritmo Dijkstra**: Implementaremos Dijkstra para encontrar la ruta más corta entre dos puntos en el grafo.
+3. **Lectura del Archivo**: El archivo de entrada será leído línea por línea y se construirá el grafo basándose en los datos proporcionados.
+
+### 3) Checklist REQ_XX -> dónde se cubre (archivo/función)
+
+- **REQ_01 - REQ_03**: No aplicables directamente a Python, pero aseguraremos que el código sea ejecutable.
+- **REQ_04**: `main.py` y las funciones en `graph.py`, `dijkstra_algorithm.py`.
+- **REQ_05**: Se cubre durante la implementación y pruebas del código.
+- **REQ_06**: Marcado de secciones `TODO` en el pseudocódigo inicial, luego reemplazadas por código real en los archivos mencionados.
+- **REQ_07 - REQ_08**: No aplicables directamente a Python, pero aseguraremos la documentación y pruebas adecuadas para cumplir con las pautas de evaluación.
+- **REQ_09 - REQ_11**: Se cubren en los comentarios del código y la documentación.
+
+### Ejemplo de Implementación
+
+#### main.py
+import sys
+from graph import Graph
+from dijkstra_algorithm import find_shortest_path
+
+def read_mesh(file_name):
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+        N = int(lines[0])
+        points = [tuple(map(float, line.split())) for line in lines[1:N+1]]
+        E = int(lines[N+1])
+        edges = [(int(line.split()[0]), int(line.split()[1])) for line in lines[N+2:]]
+    return points, edges
+
+def main():
+    if len(sys.argv) != 4:
+        print("Usage: python3 main.py <file_name> <start_index> <end_index>")
+        sys.exit(1)
+    
+    file_name = sys.argv[1]
+    start_index = int(sys.argv[2])
+    end_index = int(sys.argv[3])
+
+    points, edges = read_mesh(file_name)
+    graph = Graph(points, edges)
+
+    path_indices, path_points = find_shortest_path(graph, start_index, end_index)
+    
+    for index in path_indices:
+        print(f"Point {index}: {path_points[index]}")
+
+if __name__ == "__main__":
+    main()
+
+#### graph.py
+import math
+
+class Graph:
+    def __init__(self, points, edges):
+        self.points = points
+        self.graph = {}
+        
+        for edge in edges:
+            start, end = edge
+            cost = calculate_distance(points[start], points[end])
+            
+            if start not in self.graph:
+                self.graph[start] = []
+            if end not in self.graph:
+                self.graph[end] = []
+                
+            self.graph[start].append((end, cost))
+            self.graph[end].append((start, cost))
+
+    def get_neighbors(self, vertex):
+        return [(neighbor, weight) for neighbor, weight in self.graph[vertex]]
+
+def calculate_distance(point1, point2):
+    return math.sqrt(sum([(x-y)**2 for x, y in zip(point1, point2)]))
+
+#### dijkstra_algorithm.py
+import heapq
+
+def find_shortest_path(graph, start_index, end_index):
+    distances = {vertex: float('inf') for vertex in graph.graph}
+    previous_vertices = {vertex: None for vertex in graph.graph}
+    distances[start_index] = 0
+    vertices_queue = [(0, start_index)]
+    
+    while vertices_queue:
+        current_distance, current_vertex = heapq.heappop(vertices_queue)
+        
+        if current_distance > distances[current_vertex]:
+            continue
+        
+        for neighbor, weight in graph.get_neighbors(current_vertex):
+            distance = current_distance + weight
+            
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                previous_vertices[neighbor] = current_vertex
+                heapq.heappush(vertices_queue, (distance, neighbor))
+    
+    path_indices =

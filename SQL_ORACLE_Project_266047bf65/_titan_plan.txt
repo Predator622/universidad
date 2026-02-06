@@ -1,0 +1,96 @@
+### 1. Lista de Archivos y Rol
+
+- `database_schema.sql` - Esquema inicial de la base de datos.
+- `procedures_and_functions.py` - Contiene los procedimientos almacenados y funciones en Python utilizando una librería como SQLAlchemy para interactuar con Oracle.
+- `triggers.sql` - Script SQL que contiene todos los disparadores necesarios.
+- `audit_triggers.sql` - Script SQL específico para disparadores de auditoría.
+
+### 2. Decisiones Técnicas Clave
+
+1. **Uso de SQLAlchemy**: Para facilitar la interacción con Oracle desde Python, se utilizará SQLAlchemy, una librería ORM (Object Relational Mapping) que permite escribir código en Python y mapearlo a SQL.
+   
+2. **Manejo de Transacciones**: Cada procedimiento almacenado y disparador manejará transacciones para asegurar la integridad de los datos.
+
+3. **Auditoría**: Se implementará un sistema de auditoría que registra todas las inserciones, actualizaciones y eliminaciones en las tablas `clientes` y `pedidos`.
+
+4. **Validación de Precios**: Los disparadores verificarán que el precio de venta sea al menos un 10% superior al precio del proveedor.
+
+5. **Inventario Controlado**: Se implementará una lógica para asegurar que no se realicen pedidos si las existencias son insuficientes.
+
+### 3. Checklist REQ_XX -> Dónde se Cubre (Archivo/Función)
+
+- **REQ_01 - REQ_02**: General, todos los archivos y funciones cubren esta necesidad.
+  
+- **REQ_04**:
+    - `procedures_and_functions.py`: Procedimiento almacenado para actualizar el inventario de un producto.
+
+- **REQ_05**:
+    - `procedures_and_functions.py`: Procedimiento almacenado para insertar información del detalle de un pedido.
+
+- **REQ_06**:
+    - `procedures_and_functions.py`: Función que devuelve la gama de productos más vendidos.
+
+- **REQ_07**:
+    - `procedures_and_functions.py`: Procedimiento almacenado o función que registra nuevos medios de pago, verificando el código del cliente.
+
+- **REQ_08**:
+    - `triggers.sql`: Disparador que descontará las existencias de los productos cuando se haga un pedido.
+
+- **REQ_09**:
+    - `triggers.sql`: Disparador que evita que un empleado sea su propio jefe.
+
+- **REQ_10**:
+    - `database_schema.sql`: Modificación del esquema para agregar el atributo "valortotal" a la tabla de pedidos.
+    
+- **REQ_11**:
+    - `audit_triggers.sql`: Disparadores que realizan auditoría en las tablas clientes y pedidos.
+
+- **REQ_12**:
+    - `procedures_and_functions.py`: Procedimiento almacenado para actualizar el valor total de un pedido basándose en su detalle.
+
+- **REQ_13**: 
+    - `procedures_and_functions.py`: Procedimiento almacenado que actualiza el valor total de todos los pedidos a partir del procedimiento anterior.
+    
+- **REQ_14**:
+    - `triggers.sql`: Disparador que registra automáticamente el valor total de un pedido basándose en la tabla detallepedido.
+
+- **REQ_15**:
+    - `triggers.sql`: Disparadores adicionales para verificar y garantizar que el precio de venta sea superior al 10% del precio del proveedor.
+    
+- **REQ_16**:
+    - `triggers.sql`: Disparador que verifica la existencia de inventario antes de realizar un pedido.
+
+### Ejemplos de Implementación
+
+#### Procedimiento Almacenado para Actualizar Inventario
+# procedures_and_functions.py
+from sqlalchemy import create_engine, text
+
+def update_inventory(product_id, new_quantity):
+    engine = create_engine('oracle+cx_oracle://username:password@hostname:port/service_name')
+    
+    with engine.connect() as connection:
+        query = text("EXEC sp_update_inventory(:product_id, :new_quantity)")
+        result = connection.execute(query, product_id=product_id, new_quantity=new_quantity)
+
+#### Disparador para Descontar Existencias
+-- triggers.sql
+CREATE OR REPLACE TRIGGER trg_descontar_existencias
+BEFORE INSERT ON detallepedido
+FOR EACH ROW
+BEGIN
+    UPDATE producto SET existencia = existencia - :new.cantidad WHERE id_producto = :new.id_producto;
+END;
+
+#### Función para Gama de Productos Más Vendidos
+# procedures_and_functions.py
+def most_sold_product_range():
+    engine = create_engine('oracle+cx_oracle://username:password@hostname:port/service_name')
+    
+    with engine.connect() as connection:
+        query = text("SELECT * FROM sp_most_sold_product_range()")
+        result = connection.execute(query)
+        
+        return [row for row in result]
+
+#### Disparador para Auditoría

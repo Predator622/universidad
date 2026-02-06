@@ -1,0 +1,10 @@
+*.tmp
+*.log
+__pycache__/
+*.pyc
+*.class
+*.o
+*.exe
+titan_build
+titan_build.exe
+.DS_Store
